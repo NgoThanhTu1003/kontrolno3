@@ -17,6 +17,9 @@
 <body>
 
     <button id="requestBtn" style="background-color: #e7e7e7; color: black; width: 100px; height: 50px;" > request permission</button>
+    <div class="box box3">
+      Some copy on the website <span id='text'>this shiould be changed </span>some copy on the website
+    </div>
 
     <script type="module">
         import * as THREE from 'three';
@@ -69,6 +72,11 @@
         requestBtn.addEventListener("click",requestPermission);
         requestBtn.addEventListener("click",removeBtn);
 
+        // let a = document.getElementById("geld");
+        // a.addEventListener('input', () => console.log(a.value))
+        // //a = parseInt(a, 10);
+        // b = a.toString();
+
 
 
         function requestPermission() {
@@ -92,6 +100,9 @@
         var alpha1 = THREE.MathUtils.degToRad(event.alpha);
         var beta1 = THREE.MathUtils.degToRad(event.beta);
         var gamma1 = THREE.MathUtils.degToRad(event.gamma);
+
+        document.getElementById('text').innerHTML = gamma1;
+
         // VAX.camera.rotation.set(beta1,alpha1,-gamma1);
 
         // if(gamma1 >0){
