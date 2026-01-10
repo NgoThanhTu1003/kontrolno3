@@ -32,7 +32,7 @@
 			VAX.camera.fov = 30;
 			VAX.camera.updateProjectionMatrix();
 
-            VAX.scene.rotation.x=Math.PI/-2;
+            
 
 			// var controls = new OrbitControls(VAX.camera, VAX.renderer.domElement);
 
@@ -97,7 +97,7 @@
         var beta1 = THREE.MathUtils.degToRad(event.beta);
         var gamma1 = THREE.MathUtils.degToRad(event.gamma);
 
-        document.getElementById('text').innerHTML = gamma1;
+        document.getElementById('text').innerHTML = -gamma1;
 
         // VAX.camera.rotation.set(beta1,alpha1,-gamma1);
 
@@ -108,7 +108,7 @@
         var euler = new THREE.Euler(-gamma1,alpha1,beta1,'YXZ');
 
         VAX.camera.rotation.copy(euler);
-        // VAX.camera.rotation.x += Math.PI / -2;  
+        VAX.camera.rotation.x += Math.PI / -2;  
 
 
 	}
