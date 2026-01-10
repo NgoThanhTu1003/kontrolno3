@@ -90,13 +90,21 @@
         var alpha1 = THREE.MathUtils.degToRad(event.alpha);
         var beta1 = THREE.MathUtils.degToRad(event.beta);
         var gamma1 = THREE.MathUtils.degToRad(event.gamma);
-        var euler = new THREE.Euler(-alpha1, gamma1, 0, 'YXZ');
-        const screenTransform = new THREE.Quaternion().setFromAxisAngle(
-          new THREE.Vector3(0, 0, 1),
-          -Math.PI / 2
-        );
+        var euler = new THREE.Euler(beta, alpha, -gamma, 'YXZ');
+        // const screenTransform = new THREE.Quaternion().setFromAxisAngle(
+        //   new THREE.Vector3(0, 0, 1),
+        //   -Math.PI / 2
+        // );
 
-        const deviceQuat = new THREE.Quaternion().setFromEuler(euler).multiply(screenTransform);
+        const deviceQuat = new THREE.Quaternion().setFromEuler(euler);
+
+        // Screen orientation correction for LANDSCAPE-RIGHT
+        const screenQuat = new THREE.Quaternion().setFromAxisAngle(
+        new THREE.Vector3(0, 0, 1),
+        -Math.PI / 2
+        );
+        // const deviceQuat = new THREE.Quaternion().setFromEuler(euler).multiply(screenTransform);
+        deviceQuat.multiply(screenQuat);
 
         VAX.camera.quaternion.copy(deviceQuat);
 
