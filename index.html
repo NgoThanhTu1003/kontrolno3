@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<script type="importmap">
+		  {
+			"imports": {
+			  "three": "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js",
+			  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/",
+              "physijs": "./physijs/physi.module.js",
+              "vax": "./vax-physi.js"
+			}
+		  }
+	</script>    
+</head>
+<body>
+
+    <button id="requestBtn" style="background-color: #e7e7e7; color: black; width: 100px; height: 50px;" > request permission</button>
+
+    <script type="module">
+        import * as THREE from 'three';
+        import * as VAX from 'vax';
+        // import 'physijs';
+        import { OrbitControls } from "https://threejs.org/examples/jsm/controls/OrbitControls.js"        
+        // import * as TWEEN from "three/addons/libs/tween.module.js";
+		//     import * as lil from "three/addons/libs/lil-gui.module.min.js";
+        
+
+			VAX.init(animate);
+
+			VAX.camera.fov = 30;
+			VAX.camera.updateProjectionMatrix();
+
+			var controls = new OrbitControls(VAX.camera, VAX.renderer.domElement);
+
+
+				controls.enableZoom = false;
+				controls.enablePan = false;
+				controls.enableDamping = true;
+				controls.minPolarAngle = 0.1;
+				controls.maxPolarAngle = Math.PI - 0.1;
+				controls.dampingFactor = 0.1;
+
+			VAX.scene.background = new THREE.CubeTextureLoader().load([
+						'cubeImg/posx.jpg', 'cubeImg/negx.jpg',
+						'cubeImg/posy.jpg', 'cubeImg/negy.jpg',
+						'cubeImg/posz.jpg', 'cubeImg/negz.jpg']);
+			VAX.scene.background.colorSpace = THREE.LinearSRGBColorSpace;
+
+
+
+        var geometryCrystal = new THREE.IcosahedronGeometry(20,0);
+        var materialCrystal = new THREE.MeshPhysicalMaterial({roughness:0, transmission:1, thickness:1});
+
+        var crystalArray =[];
+        for(var i=0;i<30;i++){
+
+            var crystal1 = new THREE.Mesh(geometryCrystal,materialCrystal);
+
+            var r = 200;
+            crystal1.position.setFromSphericalCoords(r,THREE.MathUtils.randFloat(Math.PI/4,Math.PI/1.8),THREE.MathUtils.randFloat(0,2*Math.PI))
+
+            VAX.scene.add(crystal1)
+            crystalArray.push(crystal1);
+
+        }
+
+
+        requestBtn.addEventListener("click",requestPermission);
+        requestBtn.addEventListener("click",removeBtn);
+
+
+
+        function requestPermission() {
+            if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+                DeviceOrientationEvent.requestPermission()
+                    .then(permissionState => {
+                    if (permissionState === 'granted') {
+                        window.addEventListener("deviceorientation", deviceOrientation, true);
+
+                    }
+                    })
+                    .catch(console.error);
+                } else {
+                    window.addEventListener("deviceorientation", deviceOrientation, true);
+                }
+            } 
+      
+        
+	function deviceOrientation(event)
+	{
+        var alpha1 = THREE.MathUtils.degToRad(event.alpha);
+        var beta1 = THREE.MathUtils.degToRad(event.beta);
+        var gamma1 = THREE.MathUtils.degToRad(event.gamma);
+        var euler = new THREE.Euler(-alpha1, gamma1, 0, 'YXZ');
+        const screenTransform = new THREE.Quaternion().setFromAxisAngle(
+          new THREE.Vector3(0, 0, 1),
+          -Math.PI / 2
+        );
+
+        const deviceQuat = new THREE.Quaternion().setFromEuler(euler).multiply(screenTransform);
+
+        VAX.camera.quaternion.copy(deviceQuat);
+
+	}
+
+      
+      function removeBtn(){
+        var element = document.getElementById('requestBtn');
+        element.remove();
+
+      }
+
+
+
+
+       function animate(t){
+           controls.update();
+
+           for(var i=0;i<30;i++){
+            crystalArray[i].rotation.y=t;
+           }
+
+
+            
+        }
+
+
+
+
+
+
+
+        </script>
+</body>
+
+</html>
