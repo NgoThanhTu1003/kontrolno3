@@ -90,7 +90,7 @@
         var alpha1 = THREE.MathUtils.degToRad(event.alpha);
         var beta1 = THREE.MathUtils.degToRad(event.beta);
         var gamma1 = THREE.MathUtils.degToRad(event.gamma);
-        var euler = new THREE.Euler(beta1, alpha1, -gamma1, 'YXZ');
+        var euler = new THREE.Euler(beta1, -gamma, 0, 'YXZ');
         // const screenTransform = new THREE.Quaternion().setFromAxisAngle(
         //   new THREE.Vector3(0, 0, 1),
         //   -Math.PI / 2
